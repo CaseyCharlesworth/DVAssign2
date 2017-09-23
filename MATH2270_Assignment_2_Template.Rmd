@@ -24,11 +24,9 @@ Movies <- read.csv("IMDB-Movie-Data_mod.csv")
 Movies$Rev_male <- with(Movies, ifelse(Gender==0, Revenue_mill, NA))
 Movies$Rev_female <- with(Movies, ifelse(Gender==1, Revenue_mill, NA))
 No_Data <- nrow(Movies) - nrow(subset(Movies, Revenue_mill>-1))
-#View(Movies)
 ```
 
 ## Visualisation
-
 ```{r, fig.height=9, fig.width=15}
 # Visualise Your Data
 gg <- ggplot(Movies, aes(Rev_female))
@@ -57,8 +55,7 @@ ggsave("assign2.png", height = 8, width = 15)
 
 ```
 
-## Alternative visualisation (delete)
-```{r, fig.height=9, fig.width=15}
+```{r Alt1 vis, fig.height=9, fig.width=15, echo=FALSE}
 ggAlt <- ggplot(Movies, aes(Rev_female))
 ggAlt + geom_area(aes(x=Rev_male, y= ..density..), stat="bin", fill="royalblue", binwidth=10) +
   geom_area(aes(x=Rev_female, y= ..density..), stat="bin", fill="#fe6ba3", alpha=0.7, 
@@ -67,8 +64,45 @@ ggAlt + geom_area(aes(x=Rev_male, y= ..density..), stat="bin", fill="royalblue",
 ggsave("ggAlt.png", width = 15, height = 9)
 ```
 
+```{r Alt2 vis, echo=FALSE}
+ggAlt2 <- ggplot(Movies, aes(x=Rev_female,y=Rating))
+ggAlt2 + geom_point(colour="#fe6ba3") +
+  geom_point(aes(x=Rev_male, y=Rating), colour="royalblue")
+  
+```
+
+```{r Alt3 vis, echo=FALSE}
+ggAlt4 <- ggplot(Movies, aes(Rev_female))
+ggAlt4 + geom_density(aes(x=Rev_male), fill="royalblue", binwidth=18) +
+  geom_density(aes(x=Rev_female), fill="#fe6ba3", alpha=0.3, 
+            binwidth=18) +
+  theme_bw()
+```
+
+```{r calcs, echo=FALSE}
+table1 <- table(Movies$Gender)
+table1
+No_Data
+
+640/(640+232)
+232/(640+232)
+716/1000
+```
 
 ###Commentary (200 words)
 Although the release and popularity of Star Wars: Episode VII has completely affected the shape and story of the back-to-back histograms, the outlier itself demonstrates an interesting point - that big box office films can succeed with female leads.
 
-That said, of the 1,000 films, the lead actor was likely to be male approximately 70% of the time compared to 30% for females. That would account for the graduated gross revenue scale that can be seen on the male histogram side. Compare that to the females, who had a larger amount of low grossing films but whose films also made a good showing further up the scale. However, as can be seen by the gaps and erratic pattern, higher grossing films with women leads do not occur as consistently as those films with male leads.
+That said, of the 1,000 films, the lead actor was likely to be male approximately `r round(nrow(subset(Movies, Gender==0))/nrow(Movies)*100,1)`% of the time compared to `r round(nrow(subset(Movies, Gender==1))/nrow(Movies)*100,1)`% for females. 
+
+However, once the films with no revenue were removed, the male to female lead actor ratio changed to 3:1 respectively. 
+
+Due to the higher number of male led films, the scale up from low grossing films to the higher ones is quite naturally curved – thus meaning that more male led films have gross revenue at every step of the box office ladder up to about $750 million.
+
+It differs for female led films, in that most gross revenues are on the lower end of the scale. With each step up the histogram, there are fewer female films at this level, and thus the curve has been replaced with a histogram that contains gaps and a more erratic design.
+
+Granted there are some higher grossing films with female leads (such as Star Wars and even Passengers listed Jennifer Lawrence first, even though I would argue that Chris Pratt is the lead), however, for the most part female led films earn less at the box office.
+
+Perhaps this is due to the types of films women lead – most blockbusters tend to have the male action star (with Star Wars ep 7 bucking that trend) while most female led popular films are more along the drama, romance or comedy genres.
+
+In conclusion, we must never forget that women led blockbusters cannot only be popular but also successful at the box office.
+
